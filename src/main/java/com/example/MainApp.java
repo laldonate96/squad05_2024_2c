@@ -32,4 +32,9 @@ public class MainApp {
     public Collection<Employee> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
+
+    @GetMapping("/employees/{id}")
+    public Employee getEmployee(@PathVariable Long id) {
+        return employeeService.getEmployeeById(id);
+    }
 }

@@ -8,6 +8,9 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private Long governmentId;
+
     private String name;
 
     public Employee() {}
@@ -20,12 +23,18 @@ public class Employee {
         return this.id;
     }
 
+    public Long getGovernmentId() { return this.governmentId; }
+
     public String getName() {
         return this.name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
 
