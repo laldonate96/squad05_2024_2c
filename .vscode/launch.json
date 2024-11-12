@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "RestServiceApplication",
+            "request": "launch",
+            "mainClass": "com.example.restservice.RestServiceApplication",
+            "projectName": ""
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-RestServiceApplication<tpg>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
