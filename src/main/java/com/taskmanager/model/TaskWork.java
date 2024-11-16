@@ -1,9 +1,10 @@
 package com.taskmanager.model;
 
+import com.taskmanager.exceptions.InvalidInput;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 public class TaskWork {
@@ -16,7 +17,7 @@ public class TaskWork {
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     private int hours;
 
@@ -28,7 +29,7 @@ public class TaskWork {
         return taskId;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
@@ -37,10 +38,13 @@ public class TaskWork {
     }
 
     public void setHours(int hours) {
+        if (hours<=0){
+            throw new InvalidInput("Las horas a cargar no pueden ser negativas");
+        }
         this.hours = hours;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
