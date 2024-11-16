@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -41,5 +42,13 @@ public class MainApp {
 	@GetMapping("/task-work/{id}")
 	public TaskWork getTaskWork(@PathVariable int id) {
 		return taskWorkService.getTaskWorkById(id);
+	}
+
+	@GetMapping("/task/{id}")
+	public Collection<TaskWork> getTaskWorkByTaskId(@PathVariable String id){return taskWorkService.getTaskWorksByTaskId(id);}
+
+	@PatchMapping("/task-work/{id}")
+	public void chargeHours(@PathVariable int id, @RequestBody int hours){
+		taskWorkService.updateTaskWorkHoursById(id, hours);
 	}
 }
