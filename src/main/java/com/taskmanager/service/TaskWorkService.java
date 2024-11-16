@@ -27,4 +27,24 @@ public class TaskWorkService{
     public void save(TaskWork task) {
         taskWorkRepository.save(task);
     }
+
+    public void updateTaskWorkHoursById(int id, int hours){
+        TaskWork taskWork = taskWorkRepository.findTaskWorkById(id);
+        taskWork.setHours(hours);
+        taskWorkRepository.save(taskWork);
+    }
+
+    public List<TaskWork> getTaskWorksByTaskId(String taskId){
+        return taskWorkRepository.findByTaskId(taskId);
+    }
+
+    public int getHoursByTaskId(String taskId){
+        List<TaskWork> taskWorks = taskWorkRepository.findByTaskId(taskId);
+        int cont=0;
+
+        for(TaskWork taskWork: taskWorks){
+            cont+= taskWork.getHours();
+        }
+        return cont;
+    }
 }

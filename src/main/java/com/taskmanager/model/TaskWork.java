@@ -35,4 +35,16 @@ public class TaskWork {
     public int getHours() {
         return hours;
     }
+
+    public void setHours(int hours) {
+        this.hours = hours;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
 }

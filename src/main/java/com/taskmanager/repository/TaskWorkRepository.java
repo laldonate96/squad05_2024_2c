@@ -9,4 +9,5 @@ public interface TaskWorkRepository extends CrudRepository<TaskWork, Integer> {
     TaskWork findTaskWorkById(int id);
     List<TaskWork> findAll();
     TaskWork save(TaskWork task);
+    List<TaskWork> findByTaskId(String taskId);
 }
