@@ -1,6 +1,0 @@
-2024-11-14 18:27:01.938008-03:00 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLDataException: Value too long for column "DESCRIPTION CHARACTER VARYING(255)": "U&'Un sistema para llevar el control de los productos en un almac\\00e9n, incluye... (300)"; SQL statement:
-insert into project (description,name,id) values (?,?,?) [22001-224]
-2024-11-14 18:51:34.373172-03:00 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLDataException: Value too long for column "DESCRIPTION CHARACTER VARYING(255)": "U&'Definir la estructura de la base de datos para almacenar la informaci\\00f3n d... (273)"; SQL statement:
-insert into task (description,employee_id,name,project_id,total_hours,id) values (?,?,?,?,?,?) [22001-224]

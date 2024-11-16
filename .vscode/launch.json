@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MainApp",
+            "request": "launch",
+            "mainClass": "com.taskmanager.MainApp",
+            "projectName": "squad05_2024_2c"
+        },
+        {
+            "type": "java",
             "name": "RestServiceApplication",
             "request": "launch",
             "mainClass": "com.example.restservice.RestServiceApplication",
