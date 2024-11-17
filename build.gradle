@@ -8,6 +8,14 @@ group = 'com.taskmanager'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+jar {
+    enabled = false
+}
+bootJar {
+    enabled = true
+    archiveClassifier.set('boot')
+}
+
 repositories {
 	mavenCentral()
 }
