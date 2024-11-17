@@ -25,6 +25,10 @@ public class TaskWork {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getTaskId() {
         return taskId;
     }
