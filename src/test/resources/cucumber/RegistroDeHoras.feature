@@ -2,7 +2,7 @@ Feature: Registro de horas a tareas
 
   Scenario: Exitosamente se registran horas en una tarea
   Given una tarea con id "f635b4ca-c091-472c-8b5a-cb3086d1973"
-  When se intentan cargar 5 horas en la tarea
+  When se intentan cargar 5 horas en la tarea con id "f635b4ca-c091-472c-8b5a-cb3086d1973"
   Then las horas totales de la tarea con id "f635b4ca-c091-472c-8b5a-cb3086d1973" son 5
   And las horas cargadas son 5
 
@@ -14,5 +14,10 @@ Feature: Registro de horas a tareas
 
   Scenario: No se puede cargar horas negativas en una tarea
   Given una tarea con id "f635b4ca-c091-472c-8b5a-cb3086d1973"
-  When se intentan cargar -5 horas en la tarea
+  When se intentan cargar -5 horas en la tarea con id "f635b4ca-c091-472c-8b5a-cb3086d1973"
   Then la acción debería fallar debido a que "Las horas a cargar no pueden ser negativas"
+
+  Scenario: No se puede cargar horas en una tarea inexistente
+    Given una tarea con id "f635b4ca-c091-472c-8b5a-cb3086d1973"
+    When se intentan cargar 5 horas en la tarea con id "id-invalido"
+    Then la acción debería fallar debido a que "No se encontró la tarea con ID: id-invalido"
