@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -29,6 +31,12 @@ public class MainApp {
 	@Autowired
     private ProjectResourcesService projectResourcesService;
 
+	@Autowired
+	private ProjectHoursService projectHoursService;
+
+	@Autowired
+    private ProjectResourcesHoursService projectResourcesHoursService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(MainApp.class, args);
 	}
@@ -37,10 +45,6 @@ public class MainApp {
 	@PostMapping("/task-work")
 	@ResponseStatus(HttpStatus.CREATED)
 	public TaskWork createTaskWork(@RequestBody TaskWork taskWork) {
-
-        /*/if (taskWork.getHours()>0) {
-            throw new TaskWorkHoursMustBeValid("Task Work hours must be greater than 0");
-        }/*/
 		return taskWorkService.createTaskWork(taskWork);
 	}
 
@@ -66,6 +70,33 @@ public class MainApp {
     public List<ResourceDTO> getProjectResources(@PathVariable String projectId) {
         return projectResourcesService.getResourcesByProjectId(projectId);
     }
+
+	@GetMapping("/projects/{projectId}/hours")
+    public ResponseEntity<?> getProjectHours(@PathVariable String projectId) {
+        try {
+            Map<String, Object> projectHours = projectHoursService.getProjectTotalHours(projectId);
+            return ResponseEntity.ok(projectHours);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Failed to fetch project hours");
+            error.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
+	@GetMapping("/projects/{projectId}/resources/hours/{year}")
+	public ResponseEntity<?> getProjectResourcesMonthlyHours(
+			@PathVariable String projectId,
+			@PathVariable int year) {
+		try {
+			return ResponseEntity.ok(projectResourcesHoursService.getResourcesMonthlyHours(projectId, year));
+		} catch (Exception e) {
+			Map<String, String> error = new HashMap<>();
+			error.put("error", "Failed to fetch project resources monthly hours");
+			error.put("message", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+		}
+	}
 
 	@GetMapping("/resource/{resourceId}/task")
 	public List<TaskDTO> getResourceTasks(@PathVariable String resourceId){
