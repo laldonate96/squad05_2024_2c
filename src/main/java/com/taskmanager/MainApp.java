@@ -1,6 +1,7 @@
 package com.taskmanager;
 
 import com.taskmanager.dto.ResourceDTO;
+import com.taskmanager.dto.TaskDTO;
 import com.taskmanager.model.TaskWork;
 import com.taskmanager.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ import java.util.List;
 @RestController
 @SpringBootApplication
 public class MainApp {
+
+	@Autowired
+	private TaskService taskService;
 
 	@Autowired
 	private TaskWorkService taskWorkService;
@@ -60,4 +64,9 @@ public class MainApp {
     public List<ResourceDTO> getProjectResources(@PathVariable String projectId) {
         return projectResourcesService.getResourcesByProjectId(projectId);
     }
+
+	@GetMapping("/resource/{resourceId}/task")
+	public List<TaskDTO> getResourceTasks(@PathVariable String resourceId){
+		return taskService.getTaskByResourceId(resourceId);
+	}
 }

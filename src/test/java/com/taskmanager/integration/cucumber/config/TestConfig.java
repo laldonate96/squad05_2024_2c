@@ -2,6 +2,7 @@ package com.taskmanager.integration.cucumber.config;
 
 import com.taskmanager.repository.TaskWorkRepository;
 import com.taskmanager.service.ProjectResourcesService;
+import com.taskmanager.service.TaskService;
 import com.taskmanager.service.TaskWorkService;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TestConfig {
+
+    @Bean
+    public TaskService taskService() {
+        return new TaskService();
+    }
 
     @Bean
     public TaskWorkRepository taskWorkRepository() {

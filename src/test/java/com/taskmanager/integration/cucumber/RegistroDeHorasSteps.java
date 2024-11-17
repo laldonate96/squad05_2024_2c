@@ -1,10 +1,12 @@
 package com.taskmanager.integration.cucumber;
 
 import com.taskmanager.dto.ResourceDTO;
+import com.taskmanager.dto.TaskDTO;
 import com.taskmanager.integration.cucumber.config.TestConfig;
 import com.taskmanager.model.TaskWork;
 import com.taskmanager.repository.TaskWorkRepository;
 import com.taskmanager.service.ProjectResourcesService;
+import com.taskmanager.service.TaskService;
 import com.taskmanager.service.TaskWorkService;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -27,6 +29,9 @@ public class RegistroDeHorasSteps {
 
     @Autowired
     private TaskWorkService taskWorkService;
+
+    @Autowired
+    private TaskService taskService;
 
     @Autowired
     private TaskWorkRepository taskWorkRepository;
@@ -66,9 +71,10 @@ public class RegistroDeHorasSteps {
         taskWorkService.save(taskWork);
     }
 
-    @When("se intentan cargar {int} horas en la tarea")
-    public void tryToChargeHours(int hours) {
+    @When("se intentan cargar {int} horas en la tarea con id {string}")
+    public void tryToChargeHours(int hours, String taskId) {
         try {
+            taskService.taskExists(taskId);
             taskWork.setHours(hours);
             taskWorkService.createTaskWork(taskWork);
         } catch(RuntimeException e) {
