@@ -1,5 +1,6 @@
 package com.taskmanager;
 
+import com.taskmanager.dto.ResourceDTO;
 import com.taskmanager.model.TaskWork;
 import com.taskmanager.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class MainApp {
 
 	@Autowired
 	private TaskWorkService taskWorkService;
+
+	@Autowired
+    private ProjectResourcesService projectResourcesService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MainApp.class, args);
@@ -51,4 +55,9 @@ public class MainApp {
 	public void chargeHours(@PathVariable int id, @RequestBody int hours){
 		taskWorkService.updateTaskWorkHoursById(id, hours);
 	}
+
+	@GetMapping("/projects/{projectId}/resources")
+    public List<ResourceDTO> getProjectResources(@PathVariable String projectId) {
+        return projectResourcesService.getResourcesByProjectId(projectId);
+    }
 }
