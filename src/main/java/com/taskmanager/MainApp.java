@@ -10,8 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -67,6 +69,11 @@ public class MainApp {
 
 	@GetMapping("/resource/{resourceId}/task")
 	public List<TaskDTO> getResourceTasks(@PathVariable String resourceId){
-		return taskService.getTaskByResourceId(resourceId);
+		return taskService.getTasksByResourceId(resourceId);
+	}
+
+	@PostMapping("/resource/{resourceId}/task-work")
+	public List<TaskWork> getTaskWorksByResourceAndDate(@PathVariable String resourceId, @RequestBody LocalDate date){
+		return taskWorkService.getTaskWorksByResourceAndDate(resourceId, date);
 	}
 }

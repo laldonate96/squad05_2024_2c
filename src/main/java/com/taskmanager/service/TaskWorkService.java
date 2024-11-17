@@ -1,16 +1,22 @@
 package com.taskmanager.service;
 
+import com.taskmanager.dto.TaskDTO;
 import com.taskmanager.model.TaskWork;
 import com.taskmanager.repository.TaskWorkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TaskWorkService{
     @Autowired
     private TaskWorkRepository taskWorkRepository;
+
+    @Autowired
+    private TaskService taskService;
 
     public TaskWork createTaskWork(TaskWork task) {
         return taskWorkRepository.save(task);
@@ -46,5 +52,16 @@ public class TaskWorkService{
             cont+= taskWork.getHours();
         }
         return cont;
+    }
+
+    public List<TaskWork> getTaskWorksByResourceAndDate(String resourceId, LocalDate date){
+        List<TaskDTO> tasks = taskService.getTasksByResourceId(resourceId);
+        List<TaskWork> taskWorks = new ArrayList<>();
+
+        for (TaskDTO task: tasks){
+            taskWorks.addAll(taskWorkRepository.findByTaskIdAndCreatedAtBetween(task.getId(), date, date.plusDays(7)));
+        }
+
+        return taskWorks;
     }
 }

@@ -2,7 +2,6 @@ package com.taskmanager.service;
 
 import com.taskmanager.dto.ResourceDTO;
 import com.taskmanager.dto.TaskDTO;
-import com.taskmanager.exceptions.ProjectNotFoundException;
 import com.taskmanager.exceptions.ResourceNotFoundException;
 import com.taskmanager.exceptions.TaskNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ public class TaskService {
     private final String RESOURCES_URL = "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/32c8fe38-22a6-4fbb-b461-170dfac937e4/recursos-api/1.0.1/m/recursos";
 
 
-    public List<TaskDTO> getTaskByResourceId(String resourceId) {
+    public List<TaskDTO> getTasksByResourceId(String resourceId) {
 
         List<ResourceDTO> resources = Arrays.asList(
                 restTemplate.getForObject(RESOURCES_URL, ResourceDTO[].class));
