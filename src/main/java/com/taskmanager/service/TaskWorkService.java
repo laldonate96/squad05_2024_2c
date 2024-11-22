@@ -1,14 +1,20 @@
 package com.taskmanager.service;
 
+import com.taskmanager.dto.ProjectDTO;
 import com.taskmanager.dto.TaskDTO;
+import com.taskmanager.dto.TaskWorkDTO;
 import com.taskmanager.model.TaskWork;
 import com.taskmanager.repository.TaskWorkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskWorkService{
@@ -18,16 +24,77 @@ public class TaskWorkService{
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private final String TASKS_URL = "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/32c8fe38-22a6-4fbb-b461-170dfac937e4/tareas-api/1.0.0/m/tareas";
+    private final String PROJECTS_URL = "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/32c8fe38-22a6-4fbb-b461-170dfac937e4/proyectos-api/1.0.0/m/proyectos";
+
     public TaskWork createTaskWork(TaskWork task) {
         return taskWorkRepository.save(task);
     }
 
-    public List<TaskWork> getAllTaskWorks() {
-        return taskWorkRepository.findAll();
+    public Collection<TaskWorkDTO> getAllTaskWorks() {
+        List<TaskWork> taskWorks = taskWorkRepository.findAll();
+        List<TaskDTO> tasks = Arrays.asList(
+            restTemplate.getForObject(TASKS_URL, TaskDTO[].class));
+        List<ProjectDTO> projects = Arrays.asList(
+            restTemplate.getForObject(PROJECTS_URL, ProjectDTO[].class));
+
+        return taskWorks.stream()
+            .map(taskWork -> {
+                TaskWorkDTO dto = new TaskWorkDTO();
+                dto.setId(taskWork.getId());
+                dto.setTaskId(taskWork.getTaskId());
+                dto.setCreatedAt(taskWork.getCreatedAt());
+                dto.setHours(taskWork.getHours());
+
+                tasks.stream()
+                    .filter(task -> task.getId().equals(taskWork.getTaskId()))
+                    .findFirst()
+                    .ifPresent(task -> {
+                        dto.setTaskName(task.getNombre());
+                        dto.setProjectId(task.getProyectoId());
+
+                        projects.stream()
+                            .filter(project -> project.getId().equals(task.getProyectoId()))
+                            .findFirst()
+                            .ifPresent(project -> dto.setProjectName(project.getNombre()));
+                    });
+
+                return dto;
+            })
+            .collect(Collectors.toList());
     }
 
-    public TaskWork getTaskWorkById(int id) {
-        return taskWorkRepository.findTaskWorkById(id);
+    public TaskWorkDTO getTaskWorkById(int id) {
+        TaskWork taskWork = taskWorkRepository.findTaskWorkById(id);
+
+        List<TaskDTO> tasks = Arrays.asList(
+            restTemplate.getForObject(TASKS_URL, TaskDTO[].class));
+        List<ProjectDTO> projects = Arrays.asList(
+            restTemplate.getForObject(PROJECTS_URL, ProjectDTO[].class));
+
+        TaskWorkDTO dto = new TaskWorkDTO();
+        dto.setId(taskWork.getId());
+        dto.setTaskId(taskWork.getTaskId());
+        dto.setCreatedAt(taskWork.getCreatedAt());
+        dto.setHours(taskWork.getHours());
+
+        tasks.stream()
+            .filter(task -> task.getId().equals(taskWork.getTaskId()))
+            .findFirst()
+            .ifPresent(task -> {
+                dto.setTaskName(task.getNombre());
+                dto.setProjectId(task.getProyectoId());
+
+                projects.stream()
+                    .filter(project -> project.getId().equals(task.getProyectoId()))
+                    .findFirst()
+                    .ifPresent(project -> dto.setProjectName(project.getNombre()));
+            });
+
+        return dto;
     }
 
     public void save(TaskWork task) {

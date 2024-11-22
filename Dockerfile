@@ -6,6 +6,11 @@ RUN gradle bootJar --no-daemon
 
 # Run stage
 FROM openjdk:11-jre-slim
+
+# Create directory for persistent data
+RUN mkdir /data
+VOLUME /data
+
 COPY --from=build /home/gradle/src/build/libs/*-boot.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app.jar"]
