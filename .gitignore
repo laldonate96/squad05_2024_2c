@@ -1,0 +1,4 @@
+/data/
+*.db
+*.mv.db
+*.trace.db

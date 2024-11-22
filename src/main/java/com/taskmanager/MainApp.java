@@ -2,6 +2,7 @@ package com.taskmanager;
 
 import com.taskmanager.dto.ResourceDTO;
 import com.taskmanager.dto.TaskDTO;
+import com.taskmanager.dto.TaskWorkDTO;
 import com.taskmanager.model.TaskWork;
 import com.taskmanager.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +50,12 @@ public class MainApp {
 	}
 
 	@GetMapping("/task-work")
-	public Collection<TaskWork> getAllTaskWorks() {
+	public Collection<TaskWorkDTO> getAllTaskWorks() {
 		return taskWorkService.getAllTaskWorks();
 	}
 
 	@GetMapping("/task-work/{id}")
-	public TaskWork getTaskWork(@PathVariable int id) {
+	public TaskWorkDTO getTaskWork(@PathVariable int id) {
 		return taskWorkService.getTaskWorkById(id);
 	}
 
