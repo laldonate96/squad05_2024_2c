@@ -12,5 +12,5 @@ public interface TaskWorkRepository extends CrudRepository<TaskWork, Integer> {
     TaskWork save(TaskWork task);
     List<TaskWork> findByTaskId(String taskId);
     List<TaskWork> findByTaskIdAndCreatedAtBetween(String taskId, LocalDate dateStart, LocalDate dateFinish);
-
+    
 }

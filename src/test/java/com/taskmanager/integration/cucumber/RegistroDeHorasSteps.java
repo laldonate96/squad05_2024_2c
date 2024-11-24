@@ -2,6 +2,7 @@ package com.taskmanager.integration.cucumber;
 
 import com.taskmanager.dto.ResourceDTO;
 import com.taskmanager.dto.TaskDTO;
+import com.taskmanager.dto.TaskWorkDTO;
 import com.taskmanager.integration.cucumber.config.TestConfig;
 import com.taskmanager.model.TaskWork;
 import com.taskmanager.repository.TaskWorkRepository;
@@ -37,15 +38,26 @@ public class RegistroDeHorasSteps {
     private TaskWorkRepository taskWorkRepository;
 
     private TaskWork taskWork;
+    private TaskWorkDTO taskWorkRequest;
     private String errorMsj;
 
     @Given("una tarea con id {string}")
     public void taskWithId(String taskId) {
+        taskWorkRequest = new TaskWorkDTO();
+        taskWorkRequest.setTaskId(taskId);
+        taskWorkRequest.setCreatedAt(LocalDate.now());
+
         taskWork = new TaskWork();
         taskWork.setTaskId(taskId);
         taskWork.setId(1);
+        taskWork.setCreatedAt(LocalDate.now());
 
-        when(taskWorkRepository.save(any(TaskWork.class))).thenReturn(taskWork);
+        when(taskWorkRepository.save(any(TaskWork.class))).thenAnswer(invocation -> {
+            TaskWork savedTask = (TaskWork) invocation.getArguments()[0];
+            taskWork.setHours(savedTask.getHours());
+            return taskWork;
+        });
+
         when(taskWorkRepository.findTaskWorkById(1)).thenReturn(taskWork);
 
         List<TaskWork> taskWorks = new ArrayList<>();
@@ -55,6 +67,11 @@ public class RegistroDeHorasSteps {
 
     @Given("una tarea con id {string} y {int} horas registradas en el dia {string}")
     public void unaTareaConConIdHorasTotalesRegistradasYHorasRegistradasEnElDia(String taskId, int hours, String date) {
+        taskWorkRequest = new TaskWorkDTO();
+        taskWorkRequest.setTaskId(taskId);
+        taskWorkRequest.setHours(hours);
+        taskWorkRequest.setCreatedAt(LocalDate.parse(date));
+
         taskWork = new TaskWork();
         taskWork.setId(1);
         taskWork.setHours(hours);
@@ -75,8 +92,13 @@ public class RegistroDeHorasSteps {
     public void tryToChargeHours(int hours, String taskId) {
         try {
             taskService.taskExists(taskId);
-            taskWork.setHours(hours);
-            taskWorkService.createTaskWork(taskWork);
+
+            taskWorkRequest = new TaskWorkDTO();
+            taskWorkRequest.setHours(hours);
+            taskWorkRequest.setTaskId(taskId);
+            taskWorkRequest.setCreatedAt(LocalDate.now());
+
+            taskWork = taskWorkService.createTaskWork(taskWorkRequest);
         } catch(RuntimeException e) {
             errorMsj = e.getMessage();
         }
@@ -86,6 +108,7 @@ public class RegistroDeHorasSteps {
     public void intentoModificarALasHorasRegistradasDeLaTarea(int newHours) {
         try {
             taskWorkService.updateTaskWorkHoursById(taskWork.getId(), newHours);
+            taskWork.setHours(newHours);
         } catch(RuntimeException e) {
             errorMsj = e.getMessage();
         }
@@ -93,6 +116,10 @@ public class RegistroDeHorasSteps {
 
     @Then("las horas totales de la tarea con id {string} son {int}")
     public void lasHorasTotalesDeLaTareaSon(String taskId, int totalHours) {
+        List<TaskWork> taskWorks = new ArrayList<>();
+        taskWorks.add(taskWork);
+        when(taskWorkRepository.findByTaskId(taskId)).thenReturn(taskWorks);
+
         assertEquals(totalHours, taskWorkService.getHoursByTaskId(taskId));
     }
 

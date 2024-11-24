@@ -2,6 +2,7 @@ package com.taskmanager.integration.cucumber;
 
 import com.taskmanager.dto.ResourceDTO;
 import com.taskmanager.dto.TaskDTO;
+import com.taskmanager.dto.TaskWorkDTO;
 import com.taskmanager.model.TaskWork;
 import com.taskmanager.repository.TaskWorkRepository;
 import com.taskmanager.service.ProjectResourcesService;
@@ -38,24 +39,36 @@ public class ConsultaDeHorasSteps {
     String errorMsj;
 
     @Given("{int} horas cargadas en la tarea con id {string} en la fecha {string} y con {int} horas cargadas en la tarea con id {string} en la fecha {string}")
-    public void anEmployeeWithTwoTaskWorks( int hours1, String taskId1, String date1, int hours2, String taskId2, String date2){
+    public void anEmployeeWithTwoTaskWorks(int hours1, String taskId1, String date1, int hours2, String taskId2, String date2) {
+        // Create first TaskWork using CreateTaskWorkRequest
+        TaskWorkDTO request1 = new TaskWorkDTO();
+        request1.setHours(hours1);
+        request1.setTaskId(taskId1);
+        request1.setCreatedAt(LocalDate.parse(date1));
+
         taskWork1.setHours(hours1);
         taskWork1.setTaskId(taskId1);
         taskWork1.setCreatedAt(LocalDate.parse(date1));
 
-        when(taskWorkRepository.save(taskWork1)).thenReturn(taskWork1);
+        when(taskWorkRepository.save(any(TaskWork.class))).thenReturn(taskWork1);
         when(taskWorkRepository.findTaskWorkById(1)).thenReturn(taskWork1);
 
-        taskWorkService.createTaskWork(taskWork1);
+        taskWorkService.createTaskWork(request1);
+
+        // Create second TaskWork using CreateTaskWorkRequest
+        TaskWorkDTO request2 = new TaskWorkDTO();
+        request2.setHours(hours2);
+        request2.setTaskId(taskId2);
+        request2.setCreatedAt(LocalDate.parse(date2));
 
         taskWork2.setHours(hours2);
         taskWork2.setTaskId(taskId2);
         taskWork2.setCreatedAt(LocalDate.parse(date2));
 
-        when(taskWorkRepository.save(taskWork2)).thenReturn(taskWork2);
+        when(taskWorkRepository.save(any(TaskWork.class))).thenReturn(taskWork2);
         when(taskWorkRepository.findTaskWorkById(2)).thenReturn(taskWork2);
 
-        taskWorkService.createTaskWork(taskWork2);
+        taskWorkService.createTaskWork(request2);
     }
 
     @When("se intenta consultar las tareas asignadas en la semana de la fecha {string} del empleado con id {string}")
