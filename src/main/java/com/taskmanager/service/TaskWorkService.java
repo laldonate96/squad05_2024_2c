@@ -30,8 +30,13 @@ public class TaskWorkService{
     private final String TASKS_URL = "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/32c8fe38-22a6-4fbb-b461-170dfac937e4/tareas-api/1.0.0/m/tareas";
     private final String PROJECTS_URL = "https://anypoint.mulesoft.com/mocking/api/v1/sources/exchange/assets/32c8fe38-22a6-4fbb-b461-170dfac937e4/proyectos-api/1.0.0/m/proyectos";
 
-    public TaskWork createTaskWork(TaskWork task) {
-        return taskWorkRepository.save(task);
+    public TaskWork createTaskWork(TaskWorkDTO request) {
+        TaskWork taskWork = new TaskWork();
+        taskWork.setTaskId(request.getTaskId());
+        taskWork.setHours(request.getHours());
+        taskWork.setCreatedAt(request.getCreatedAt());
+
+        return taskWorkRepository.save(taskWork);
     }
 
     public Collection<TaskWorkDTO> getAllTaskWorks() {
@@ -130,5 +135,9 @@ public class TaskWorkService{
         }
 
         return taskWorks;
+    }
+
+    public void deleteTaskWorkById(int id){
+        taskWorkRepository.deleteById(id);
     }
 }

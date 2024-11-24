@@ -15,8 +15,7 @@ public class TaskWork {
 
     private String taskId;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at")
     private LocalDate createdAt;
 
     private int hours;
@@ -49,7 +48,11 @@ public class TaskWork {
     }
 
     public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
+        if (createdAt == null) {
+            this.createdAt = LocalDate.now();
+        } else {
+            this.createdAt = createdAt;
+        }
     }
 
     public void setTaskId(String taskId) {

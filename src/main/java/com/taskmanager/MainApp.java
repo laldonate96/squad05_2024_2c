@@ -44,10 +44,10 @@ public class MainApp {
 
 
 	@PostMapping("/task-work")
-	@ResponseStatus(HttpStatus.CREATED)
-	public TaskWork createTaskWork(@RequestBody TaskWork taskWork) {
-		return taskWorkService.createTaskWork(taskWork);
-	}
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskWork createTaskWork(@RequestBody TaskWorkDTO request) {
+        return taskWorkService.createTaskWork(request);
+    }
 
 	@GetMapping("/task-work")
 	public Collection<TaskWorkDTO> getAllTaskWorks() {
@@ -65,6 +65,11 @@ public class MainApp {
 	@PatchMapping("/task-work/{id}")
 	public void chargeHours(@PathVariable int id, @RequestBody int hours){
 		taskWorkService.updateTaskWorkHoursById(id, hours);
+	}
+
+	@DeleteMapping("/task-work/{id}")
+	public void deleteTaskWork(@PathVariable int id){
+		taskWorkService.deleteTaskWorkById(id);
 	}
 
 	@GetMapping("/projects/{projectId}/resources")
