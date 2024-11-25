@@ -148,7 +148,7 @@ public class MainApp {
 	}
 
 	@GetMapping("/resources/{resourceId}/task-works")
-	public List<TaskWork> getTaskWorksByResourceId(@PathVariable String resourceId) {
+	public Collection<TaskWorkDTO> getTaskWorksByResourceId(@PathVariable String resourceId) {
 		return taskWorkService.getTaskWorksByResourceId(resourceId);
 	}
 }

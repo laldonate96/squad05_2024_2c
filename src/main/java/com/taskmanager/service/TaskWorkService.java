@@ -40,10 +40,6 @@ public class TaskWorkService{
         return taskWorkRepository.save(taskWork);
     }
 
-    public List<TaskWork> getTaskWorksByResourceId(String resourceId) {
-        return taskWorkRepository.findByResourceId(resourceId);
-    }
-
     public Collection<TaskWorkDTO> getAllTaskWorks() {
         List<TaskWork> taskWorks = taskWorkRepository.findAll();
         List<TaskDTO> tasks = Arrays.asList(
@@ -56,6 +52,38 @@ public class TaskWorkService{
                 TaskWorkDTO dto = new TaskWorkDTO();
                 dto.setId(taskWork.getId());
                 dto.setTaskId(taskWork.getTaskId());
+                dto.setCreatedAt(taskWork.getCreatedAt());
+                dto.setHours(taskWork.getHours());
+
+                tasks.stream()
+                    .filter(task -> task.getId().equals(taskWork.getTaskId()))
+                    .findFirst()
+                    .ifPresent(task -> {
+                        dto.setTaskName(task.getNombre());
+                        dto.setProjectId(task.getProyectoId());
+
+                        projects.stream()
+                            .filter(project -> project.getId().equals(task.getProyectoId()))
+                            .findFirst()
+                            .ifPresent(project -> dto.setProjectName(project.getNombre()));
+                    });
+
+                return dto;
+            })
+            .collect(Collectors.toList());
+    }
+
+    public Collection<TaskWorkDTO> getTaskWorksByResourceId(String resourceId) {
+        List<TaskWork> taskWorks = taskWorkRepository.findByResourceId(resourceId);
+        List<TaskDTO> tasks = Arrays.asList(restTemplate.getForObject(TASKS_URL, TaskDTO[].class));
+        List<ProjectDTO> projects = Arrays.asList(restTemplate.getForObject(PROJECTS_URL, ProjectDTO[].class));
+
+        return taskWorks.stream()
+            .map(taskWork -> {
+                TaskWorkDTO dto = new TaskWorkDTO();
+                dto.setId(taskWork.getId());
+                dto.setTaskId(taskWork.getTaskId());
+                dto.setResourceId(taskWork.getResourceId());
                 dto.setCreatedAt(taskWork.getCreatedAt());
                 dto.setHours(taskWork.getHours());
 
