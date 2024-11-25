@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public class TaskWorkDTO {
     private int id;
     private String taskId;
+    private String resourceId;
     private String taskName;
     private String projectId;
     private String projectName;
@@ -13,6 +14,8 @@ public class TaskWorkDTO {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+    public String getResourceId() { return resourceId; }
+    public void setResourceId(String resourceId) { this.resourceId = resourceId; }
     public String getTaskId() { return taskId; }
     public void setTaskId(String taskId) { this.taskId = taskId; }
     public String getTaskName() { return taskName; }

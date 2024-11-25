@@ -33,10 +33,15 @@ public class TaskWorkService{
     public TaskWork createTaskWork(TaskWorkDTO request) {
         TaskWork taskWork = new TaskWork();
         taskWork.setTaskId(request.getTaskId());
+        taskWork.setResourceId(request.getResourceId());
         taskWork.setHours(request.getHours());
         taskWork.setCreatedAt(request.getCreatedAt());
 
         return taskWorkRepository.save(taskWork);
+    }
+
+    public List<TaskWork> getTaskWorksByResourceId(String resourceId) {
+        return taskWorkRepository.findByResourceId(resourceId);
     }
 
     public Collection<TaskWorkDTO> getAllTaskWorks() {

@@ -146,4 +146,9 @@ public class MainApp {
 		ResourceDTO resource = resourceService.getResourceById(id);
 		return resource != null ? ResponseEntity.ok(resource) : ResponseEntity.notFound().build();
 	}
+
+	@GetMapping("/resources/{resourceId}/task-works")
+	public List<TaskWork> getTaskWorksByResourceId(@PathVariable String resourceId) {
+		return taskWorkService.getTaskWorksByResourceId(resourceId);
+	}
 }

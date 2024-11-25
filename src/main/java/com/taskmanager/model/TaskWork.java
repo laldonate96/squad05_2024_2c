@@ -1,7 +1,6 @@
 package com.taskmanager.model;
 
 import com.taskmanager.exceptions.InvalidInput;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -12,6 +11,9 @@ public class TaskWork {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
+    @Column(nullable = false)
+    private String resourceId;
 
     private String taskId;
 
@@ -26,6 +28,14 @@ public class TaskWork {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 
     public String getTaskId() {
