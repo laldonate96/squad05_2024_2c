@@ -1,5 +1,6 @@
 package com.taskmanager;
 
+import com.taskmanager.dto.ProjectDTO;
 import com.taskmanager.dto.ResourceDTO;
 import com.taskmanager.dto.TaskDTO;
 import com.taskmanager.dto.TaskWorkDTO;
@@ -37,6 +38,13 @@ public class MainApp {
 
 	@Autowired
     private ProjectResourcesHoursService projectResourcesHoursService;
+
+	@Autowired
+	private ProjectService projectService;
+
+	@Autowired
+	private ResourceService resourceService;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(MainApp.class, args);
@@ -112,5 +120,30 @@ public class MainApp {
 	@PostMapping("/resource/{resourceId}/task-work")
 	public List<TaskWork> getTaskWorksByResourceAndDate(@PathVariable String resourceId, @RequestBody LocalDate date){
 		return taskWorkService.getTaskWorksByResourceAndDate(resourceId, date);
+	}
+
+	@GetMapping("/projects")
+	public List<ProjectDTO> getAllProjects() {
+		return projectService.getAllProjects();
+	}
+
+	@GetMapping("/projects/{id}")
+	public ResponseEntity<?> getProject(@PathVariable String id) {
+		ProjectDTO project = projectService.getProjectById(id);
+		if (project == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(project);
+	}
+
+	@GetMapping("/resources")
+	public List<ResourceDTO> getAllResources() {
+		return resourceService.getAllResources();
+	}
+
+	@GetMapping("/resources/{id}")
+	public ResponseEntity<?> getResource(@PathVariable String id) {
+		ResourceDTO resource = resourceService.getResourceById(id);
+		return resource != null ? ResponseEntity.ok(resource) : ResponseEntity.notFound().build();
 	}
 }
